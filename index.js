@@ -7,6 +7,7 @@ const PORT = 3000;
 app.use(express.json());
 
 app.get("/api/users", (req, res) => {
+  res.setHeader("X-MyName", "Debraj Sarkar");
   return res.json(users);
 });
 
@@ -20,7 +21,7 @@ app.post("/api/users", (req, res) => {
   const body = req.body;
   users.push({ id: users.length + 1, ...body });
   fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err, data) => {
-    return res.json({ msg: "Success" });
+    return res.statusCode(201).json({ msg: "Success" });
   });
 });
 

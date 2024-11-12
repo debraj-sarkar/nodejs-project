@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const fs = require("fs");
 const mongoose = require("mongoose");
@@ -5,16 +6,9 @@ let users = require("./MOCK_DATA.json");
 const { type } = require("os");
 
 const app = express();
-const PORT = 3000;
 app.use(express.json());
 
 //Mongo Db
-
-//connection
-mongoose
-  .connect("mongodb+srv://admin:eZADpMHJQ4ILhOBI@cluster0.dwr8f.mongodb.net/yt")
-  .then(() => console.log("MongoDb connected"))
-  .catch((err) => console.log("error", err));
 
 //Schema
 const userSchema = new mongoose.Schema(
@@ -109,4 +103,14 @@ app.delete("/api/users/:id", async (req, res) => {
   return res.json({ msg: "Success" });
 });
 
-app.listen(PORT, () => console.log(`Server started on ${PORT}`));
+async function main() {
+  await mongoose
+    .connect(process.env.MONGO_URL)
+    .then(() => console.log("MongoDB connected"))
+    .catch((err) => console.error("Connection error:", err));
+
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => console.log(`Server started on port ${port}`));
+}
+
+main();
